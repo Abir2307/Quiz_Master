@@ -12,6 +12,18 @@
       </div>
     </div>
 
+    <!-- Dashboard Analytics Section -->
+    <hr />
+    <h4>Dashboard Analytics</h4>
+    <div class="row">
+      <div class="col-md-12 mb-4" style="height: 400px;">
+        <h5>User Qualification Distribution</h5>
+        <canvas id="qualificationChart"></canvas>
+      </div>
+    </div>
+    
+    <!-- Tables Section -->
+    <hr />
     <h4>Subjects</h4>
     <table class="table table-bordered">
       <thead><tr><th>Name</th><th>Description</th></tr></thead>
@@ -23,6 +35,7 @@
       </tbody>
     </table>
 
+    <hr />
     <h4>Registered Users</h4>
     <table class="table table-striped">
       <thead><tr><th>Username</th><th>Full Name</th><th>Qualification</th></tr></thead>
@@ -38,6 +51,7 @@
 </template>
 
 <script>
+import Chart from 'chart.js/auto'; // Ensure you have this installed
 
 export default {
   name: 'AdminDashboard',
@@ -51,28 +65,54 @@ export default {
     };
   },
   async mounted() {
-  try {
-    const res = await fetch('/admin/dashboard', { credentials: 'include' });
+    try {
+      const res = await fetch('/admin/dashboard', { credentials: 'include' });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to fetch admin dashboard');
+      }
+      const data = await res.json();
+      this.subjects = data.subjects || [];
+      this.users = data.users || [];
+      this.filteredSubjects = this.subjects;
+      this.filteredUsers = this.users;
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || 'Failed to fetch admin dashboard');
+      this.$nextTick(() => {
+        this.createQualificationChart();
+      });
+
+    } catch (error) {
+      console.error('Error fetching admin dashboard data:', error);
+      alert(error.message || 'Error loading dashboard. Please log in as Admin.');
+      this.$router.push('/login');
     }
-
-    const data = await res.json();
-
-    this.subjects = data.subjects || [];
-    this.users = data.users || [];
-    this.filteredSubjects = this.subjects;
-    this.filteredUsers = this.users;
-
-  } catch (error) {
-    console.error('Error fetching admin dashboard data:', error);
-    alert(error.message || 'Error loading dashboard. Please log in as Admin.');
-    this.$router.push('/login');
-  }
-},
+  },
   methods: {
+    createQualificationChart() {
+      const qualifications = {};
+      this.users.forEach(user => {
+        const q = user.qualification || 'Not Specified';
+        qualifications[q] = (qualifications[q] || 0) + 1;
+      });
+
+      const qualificationCtx = document.getElementById('qualificationChart');
+      if (qualificationCtx) {
+        new Chart(qualificationCtx, {
+          type: 'doughnut',
+          data: {
+            labels: Object.keys(qualifications),
+            datasets: [{
+              label: 'User Qualifications',
+              data: Object.values(qualifications),
+              backgroundColor: [
+                '#36a2eb', '#ff6384', '#ffcd56', '#4bc0c0', '#9966ff', '#ff9f40', '#c9cbcf', '#a55eea'
+              ]
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+    },
     search() {
       const query = this.searchQuery.toLowerCase();
       this.filteredSubjects = this.subjects.filter(s =>
