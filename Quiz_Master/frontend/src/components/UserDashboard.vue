@@ -7,10 +7,20 @@
       <button @click="logout" class="btn btn-danger float-right">Logout</button>
     </div>
 
-    <h3>Subjects</h3>
+    <hr />
+    <h3 v-if="scores.length">My Quiz Performance</h3>
+    <div class="card p-3 mb-4" v-if="scores.length">
+      <canvas id="performanceChart"></canvas>
+    </div>
+
+    <h3 v-if="subjects.length">Subjects</h3>
     <table class="table table-bordered" v-if="subjects.length">
       <thead>
-        <tr><th>Name</th><th>Description</th><th>Action</th></tr>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="subject in subjects" :key="subject.id">
@@ -50,6 +60,8 @@
 </template>
 
 <script>
+import Chart from 'chart.js/auto';
+
 export default {
   name: 'UserDashboardView',
   data() {
@@ -79,6 +91,10 @@ export default {
         this.user = result.user;
         this.subjects = result.subjects;
         this.scores = result.scores;
+        // Call the chart creation method after data is fetched
+        this.$nextTick(() => {
+          this.createPerformanceChart();
+        });
       } else {
         console.error("Failed to fetch user dashboard data:", result.error || 'Unknown error');
         window.alert(result.error || 'Error fetching dashboard data. Please log in.');
@@ -87,6 +103,54 @@ export default {
     },
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleString();
+    },
+    createPerformanceChart() {
+      if (!this.scores.length) return;
+
+      const chartData = this.scores.map(score => ({
+        x: new Date(score.time_stamp_of_attempt),
+        y: (score.total_scored / score.total_marks_possible) * 100 // Calculate percentage score
+      }));
+
+      const ctx = document.getElementById('performanceChart');
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            datasets: [{
+              label: 'My Quiz Score (%)',
+              data: chartData,
+              borderColor: '#007bff',
+              backgroundColor: 'rgba(0, 123, 255, 0.2)',
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'day',
+                  tooltipFormat: 'MMMM d, yyyy, HH:mm',
+                },
+                title: {
+                  display: true,
+                  text: 'Date of Attempt'
+                }
+              },
+              y: {
+                min: 0,
+                max: 100,
+                title: {
+                  display: true,
+                  text: 'Score (%)'
+                }
+              }
+            }
+          }
+        });
+      }
     },
     async exportCSV() {
       const id = this.$route.params.id;
