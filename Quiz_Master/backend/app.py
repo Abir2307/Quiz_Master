@@ -24,9 +24,9 @@ celery.conf.timezone = 'Asia/Kolkata'
 
 with app.app_context():
     db.create_all()
-    if not User.query.filter_by(username='23F3001436@ds.study.iitm.ac.in').first():
+    if not User.query.filter_by(username='abirsaha548@gmail.com').first():
         admin = User(
-            username='23F3001436@ds.study.iitm.ac.in',
+            username='abirsaha548@gmail.com',
             password='admin123',
             full_name='Quiz Master',
             is_admin=True
