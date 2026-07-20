@@ -15,6 +15,7 @@
 
   "dependencies": {
     "bootstrap": "^5.3.7",
+    "chart.js": "^4.x.x",
     "core-js": "^3.8.3",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
