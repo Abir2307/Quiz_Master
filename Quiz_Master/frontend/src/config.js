@@ -1,0 +1,3 @@
+export const API_BASE_URL =
+  process.env.VUE_APP_API_BASE_URL ||
+  "https://quiz-master-hk68.onrender.com";
