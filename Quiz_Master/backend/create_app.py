@@ -56,8 +56,8 @@ def create_app():
         origins=[
             "https://quiz-master-13ip-hum1zgfrs-abir-sahas-projects-5fb2fcc3.vercel.app",
             "https://quiz-master-13ip-ehyj765p6-abir-sahas-projects-5fb2fcc3.vercel.app",
-            "https://quiz-master-13ip-three.vercel.app/",
-            "https://quiz-maestro-two.vercel.app/"
+            "https://quiz-master-13ip-three.vercel.app",
+            "https://quiz-maestro-two.vercel.app"
         ]
     )
 
