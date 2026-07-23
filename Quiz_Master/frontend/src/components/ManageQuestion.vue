@@ -74,8 +74,7 @@
 </template>
 
 <script>
-const FLASK_BASE_URL = 'http://localhost:5000';
-
+import { apiFetch } from "@/services/api";
 export default {
   name: 'ManageQuestion',
   props: ['quizId'],
@@ -102,8 +101,8 @@ export default {
     async fetchQuestions() {
       this.loadingQuestions = true;
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/quiz/${this.quizId}/questions`, {
-          credentials: 'include'
+        const res = await apiFetch(`/admin/quiz/${this.quizId}/questions`, {
+          method:"GET"
         });
         const data = await res.json();
         if (res.ok) {
@@ -121,10 +120,10 @@ export default {
     },
     async createQuestion() {
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/question/new/${this.quizId}`, {
+        const res = await apiFetch(`/admin/question/new/${this.quizId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          ,
           body: JSON.stringify(this.form)
         });
 
@@ -179,10 +178,10 @@ export default {
       }
 
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/question/edit/${question.id}`, {
+        const res = await apiFetch(`/admin/question/edit/${question.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          ,
           body: JSON.stringify({
             question_statement: newStatement,
             option1: newOption1,
@@ -209,9 +208,9 @@ export default {
     async deleteQuestion(id) {
       if (!window.confirm("Delete this question?")) return;
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/question/delete/${id}`, {
+        const res = await apiFetch(`/admin/question/delete/${id}`, {
           method: 'DELETE',
-          credentials: 'include'
+          
         });
         const result = await res.json();
         if (res.ok) {
