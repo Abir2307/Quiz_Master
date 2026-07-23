@@ -1,3 +1,4 @@
+import API_BASE_URL from "@/config";
 <template>
   <div class="container mt-5">
     <h2>Login</h2>
@@ -34,7 +35,7 @@ export default {
       this.error = '';
       this.successMessage = '';
       try {
-        const response = await fetch('/login', {
+        const response = await fetch('${API_BASE_URL}/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -51,14 +52,14 @@ export default {
         } else {
           this.successMessage = result.message || 'Login successful!';
           if (result.is_admin) {
-            this.$router.push('/admin/dashboard');
+            this.$router.push('${API_BASE_URL}/admin/dashboard');
           } else {
-            this.$router.push(`/user/${result.user_id}/dashboard`);
+            this.$router.push(`${API_BASE_URL}/user/${result.user_id}/dashboard`);
           }
         }
       } catch (error) {
         console.error('Error during login:', error);
-        this.error = 'Network error or server unreachable. Check if backend is running and proxy is configured.';
+        this.error = 'Network error or server unreachable.';
       }
     }
   }
