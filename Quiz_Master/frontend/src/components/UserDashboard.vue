@@ -62,7 +62,7 @@
 <script>
 import { apiFetch } from "@/services/api";
 import Chart from 'chart.js/auto';
-import 'chartjs-adapter-date-fns';
+
 export default {
   name: 'UserDashboardView',
   data() {
@@ -106,51 +106,52 @@ export default {
     },
     createPerformanceChart() {
       if (!this.scores.length) return;
-
-      const chartData = this.scores.map(score => ({
-        x: new Date(score.time_stamp_of_attempt),
-        y: (score.total_scored / score.total_marks_possible) * 100 // Calculate percentage score
-      }));
-
+    
       const ctx = document.getElementById('performanceChart');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'line',
-          data: {
-            datasets: [{
-              label: 'My Quiz Score (%)',
-              data: chartData,
+    
+      if (!ctx) return;
+    
+      const labels = this.scores.map((score, index) => `Quiz ${index + 1}`);
+    
+      const values = this.scores.map(score =>
+        ((score.total_scored / score.total_marks_possible) * 100).toFixed(2)
+      );
+    
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Score (%)',
+              data: values,
               borderColor: '#007bff',
-              backgroundColor: 'rgba(0, 123, 255, 0.2)',
-              tension: 0.1
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'day',
-                  tooltipFormat: 'MMMM d, yyyy, HH:mm',
-                },
-                title: {
-                  display: true,
-                  text: 'Date of Attempt'
-                }
-              },
-              y: {
-                min: 0,
-                max: 100,
-                title: {
-                  display: true,
-                  text: 'Score (%)'
-                }
+              backgroundColor: 'rgba(0,123,255,0.2)',
+              tension: 0.3,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Quiz Attempts'
+              }
+            },
+            y: {
+              min: 0,
+              max: 100,
+              title: {
+                display: true,
+                text: 'Score (%)'
               }
             }
           }
-        });
-      }
+        }
+      });
     },
     async exportCSV() {
       const id = this.$route.params.id;
