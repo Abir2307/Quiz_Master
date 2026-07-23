@@ -123,7 +123,6 @@ export default {
         const res = await apiFetch(`/admin/question/new/${this.quizId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          ,
           body: JSON.stringify(this.form)
         });
 
@@ -181,7 +180,6 @@ export default {
         const res = await apiFetch(`/admin/question/edit/${question.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          ,
           body: JSON.stringify({
             question_statement: newStatement,
             option1: newOption1,
@@ -209,8 +207,7 @@ export default {
       if (!window.confirm("Delete this question?")) return;
       try {
         const res = await apiFetch(`/admin/question/delete/${id}`, {
-          method: 'DELETE',
-          
+          method: 'DELETE'
         });
         const result = await res.json();
         if (res.ok) {
