@@ -7,7 +7,7 @@ from celery_worker import celery
 from celery.schedules import crontab
 from tasks.export_admin_csv import export_admin_csv
 from tasks.export_user_csv import export_user_csv
-
+import os
 app = create_app()
 
 celery.conf.beat_schedule = {
@@ -482,6 +482,7 @@ def get_quiz_meta(quiz_id):
         "remarks": quiz.remarks,
         "chapter_id": quiz.chapter_id
     })
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
