@@ -39,8 +39,7 @@
 </template>
 
 <script>
-const FLASK_BASE_URL = 'http://localhost:5000'; // Consistent base URL
-
+import { apiFetch } from "@/services/api";
 export default {
   name: 'QuizList',
   data() {
@@ -80,9 +79,9 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        const subjectRes = await fetch(`${FLASK_BASE_URL}/subjects/${this.subjectId}`, 
+        const subjectRes = await apiFetch(`/subjects/${this.subjectId}`, 
         {
-          credentials: 'include'
+          
         });
         if (!subjectRes.ok) {
           throw new Error('Failed to fetch subject details.');
@@ -90,8 +89,8 @@ export default {
         const subjectData = await subjectRes.json();
         this.subject = subjectData.subject || { name: 'Unknown Subject' };
 
-        const quizRes = await fetch(`${FLASK_BASE_URL}/user/${this.userId}/quizzes/${this.subjectId}`, {
-          credentials: 'include'
+        const quizRes = await apiFetch(`/user/${this.userId}/quizzes/${this.subjectId}`, {
+          
         });
         if (!quizRes.ok) {
           throw new Error('Failed to fetch quizzes.');
