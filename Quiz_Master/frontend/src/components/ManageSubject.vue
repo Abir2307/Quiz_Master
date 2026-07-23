@@ -54,8 +54,7 @@
 </template>
 
 <script>
-const FLASK_BASE_URL = 'http://localhost:5000';
-
+import { apiFetch } from "@/services/api";
 export default {
   name: 'ManageSubject',
   data() {
@@ -68,9 +67,9 @@ export default {
   methods: {
     async fetchSubjects() {
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/dashboard`, {
+        const res = await apiFetch(`/admin/dashboard`, {
           method: 'GET',
-          credentials: 'include'
+          
         });
 
         const data = await res.json();
@@ -88,10 +87,10 @@ export default {
     },
     async createSubject() {
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/subject/new`, {
+        const res = await apiFetch(`/admin/subject/new`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          
           body: JSON.stringify(this.form)
         });
 
@@ -117,10 +116,10 @@ export default {
       if (!this.editingSubject) return;
 
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/subject/edit/${this.editingSubject.id}`, {
+        const res = await apiFetch(`/admin/subject/edit/${this.editingSubject.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
+          
           body: JSON.stringify({
             name: this.editingSubject.name,
             description: this.editingSubject.description
@@ -151,9 +150,9 @@ export default {
       }
 
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/subject/delete/${id}`, {
+        const res = await apiFetch(`/admin/subject/delete/${id}`, {
           method: 'DELETE',
-          credentials: 'include'
+          
         });
         const result = await res.json();
         if (!res.ok) {
