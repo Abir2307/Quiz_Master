@@ -53,8 +53,8 @@
 </template>
 
 <script>
-const FLASK_BASE_URL = 'http://localhost:5000';
 
+import { apiFetch } from "@/services/api";
 export default {
   name: 'ManageChapter',
   props: ['subjectId'],
@@ -82,9 +82,8 @@ export default {
         return;
       }
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/subject/${this.subjectId}/chapters`, {
-          method: 'GET',
-          credentials: 'include'
+        const res = await apiFetch(`/admin/subject/${this.subjectId}/chapters`, {
+          method: 'GET'
         });
 
         const data = await res.json();
@@ -108,12 +107,11 @@ export default {
         return;
       }
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/chapter/new/${this.subjectId}`, {
+        const res = await apiFetch(`/admin/chapter/new/${this.subjectId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          credentials: 'include',
           body: JSON.stringify(this.form)
         });
 
@@ -140,10 +138,9 @@ export default {
       if (!this.editingChapter) return;
 
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/chapter/edit/${this.editingChapter.id}`, {
+        const res = await apiFetch(`/admin/chapter/edit/${this.editingChapter.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
           body: JSON.stringify({
             name: this.editingChapter.name,
             description: this.editingChapter.description
@@ -174,9 +171,8 @@ export default {
       }
 
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/chapter/delete/${id}`, {
-          method: 'DELETE',
-          credentials: 'include'
+        const res = await apiFetch(`/admin/chapter/delete/${id}`, {
+          method: 'DELETE'
         });
 
         const result = await res.json();
