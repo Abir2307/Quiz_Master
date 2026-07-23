@@ -43,13 +43,20 @@ def create_app():
 
     # Session
     app.config["SESSION_TYPE"] = "filesystem"
-    app.config["SESSION_COOKIE_SECURE"] = False
-    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["SESSION_COOKIE_SECURE"] = True
+    app.config["SESSION_COOKIE_SAMESITE"] = "None"
     app.config["SESSION_COOKIE_HTTPONLY"] = True
 
     Session(app)
     db.init_app(app)
 
-    CORS(app, supports_credentials=True)
+    CORS(
+        app,
+        supports_credentials=True,
+        origins=[
+            "https://quiz-master-13ip-hum1zgfrs-abir-sahas-projects-5fb2fcc3.vercel.app",
+            "https://quiz-master-13ip-ehyj765p6-abir-sahas-projects-5fb2fcc3.vercel.app"
+        ]
+    )
 
     return app
