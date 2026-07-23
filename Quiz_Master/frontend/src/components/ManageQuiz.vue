@@ -69,8 +69,7 @@
 </template>
 
 <script>
-const FLASK_BASE_URL = 'http://localhost:5000';
-
+import { apiFetch } from "@/services/api";
 export default {
   name: 'ManageQuiz',
   props: ['chapterId'],
@@ -102,9 +101,8 @@ export default {
         return;
       }
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/chapter/${this.chapterId}/quizzes`, {
-          method: 'GET',
-          credentials: 'include'
+        const res = await apiFetch(`/admin/chapter/${this.chapterId}/quizzes`, {
+          method: 'GET'
         });
 
         const data = await res.json();
@@ -127,10 +125,9 @@ export default {
         return;
       }
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/quiz/new/${this.chapterId}`, {
+        const res = await apiFetch(`/admin/quiz/new/${this.chapterId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
           body: JSON.stringify(this.form)
         });
 
@@ -158,10 +155,9 @@ export default {
       if (!this.editingQuiz) return;
 
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/quiz/edit/${this.editingQuiz.id}`, {
+        const res = await apiFetch(`/admin/quiz/edit/${this.editingQuiz.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
           body: JSON.stringify({
             date_of_quiz: this.editingQuiz.date_of_quiz,
             time_duration: this.editingQuiz.time_duration,
@@ -190,9 +186,8 @@ export default {
       if (!window.confirm("Are you sure you want to delete this quiz?")) return;
 
       try {
-        const res = await fetch(`${FLASK_BASE_URL}/admin/quiz/delete/${id}`, {
-          method: 'DELETE',
-          credentials: 'include'
+        const res = await apiFetch(`/admin/quiz/delete/${id}`, {
+          method: 'DELETE'  
         });
         const result = await res.json();
         if (!res.ok) {
