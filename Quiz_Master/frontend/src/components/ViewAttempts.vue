@@ -43,8 +43,7 @@
 </template>
 
 <script>
-const FLASK_BASE_URL = 'http://localhost:5000';
-
+import { apiFetch } from "@/services/api";
 export default {
   name: 'ViewAttempts',
   data() {
@@ -59,9 +58,8 @@ export default {
     this.error = null;
     try {
       console.log('DEBUG: ViewAttempts - Attempting to fetch attempts from:', `${FLASK_BASE_URL}/admin/attempts`);
-      const res = await fetch(`${FLASK_BASE_URL}/admin/attempts`, {
-        method: 'GET', 
-        credentials: 'include'
+      const res = await apiFetch(`/admin/attempts`, {
+        method: 'GET'
       });
 
       const data = await res.json();
