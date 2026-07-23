@@ -35,8 +35,7 @@
 </template>
 
 <script>
-const FLASK_BASE_URL = 'http://localhost:5000';
-
+import { apiFetch } from "@/services/api";
 export default {
   name: 'QuizPage',
   data() {
@@ -92,8 +91,7 @@ export default {
     },
     async fetchQuizMetadata() {
       console.log(`DEBUG: Fetching quiz metadata for quizId: ${this.quizId}`);
-      const res = await fetch(`${FLASK_BASE_URL}/quizzes/${this.quizId}`, {
-        credentials: 'include'
+      const res = await apiFetch(`/quizzes/${this.quizId}`, {
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -107,9 +105,8 @@ export default {
     },
     async fetchQuestions() {
       console.log(`DEBUG: Fetching questions for quizId: ${this.quizId}`);
-      const res = await fetch(`${FLASK_BASE_URL}/user/${this.userId}/quiz/${this.quizId}`, {
-        method: 'GET',
-        credentials: 'include'
+      const res = await apiFetch(`/user/${this.userId}/quiz/${this.quizId}`, {
+        method: 'GET'
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -152,12 +149,12 @@ export default {
       };
 
       console.log(`DEBUG: Submitting quiz ${this.quizId} for user ${this.userId}. Payload:`, payload);
-      const res = await fetch(`${FLASK_BASE_URL}/user/${this.userId}/quiz/${this.quizId}`, {
+      const res = await apiFetch(`/user/${this.userId}/quiz/${this.quizId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include',
+        
         body: JSON.stringify(payload)
       });
 
