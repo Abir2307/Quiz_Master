@@ -57,7 +57,7 @@ export default {
     this.loading = true;
     this.error = null;
     try {
-      console.log('DEBUG: ViewAttempts - Attempting to fetch attempts from:', `${FLASK_BASE_URL}/admin/attempts`);
+      console.log('DEBUG: ViewAttempts - Attempting to fetch attempts from:', `/admin/attempts`);
       const res = await apiFetch(`/admin/attempts`, {
         method: 'GET'
       });
