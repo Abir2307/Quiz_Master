@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { apiFetch } from "@/services/api";
 export default {
   name: 'UserLogin',
   data() {
@@ -34,14 +35,13 @@ export default {
       this.error = '';
       this.successMessage = '';
       try {
-        const response = await fetch('/login', {
+        const response = await apiFetch('/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             username: this.username,
             password: this.password
-          }),
-          credentials: 'include'
+          })
         });
 
         const result = await response.json();
