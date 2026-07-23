@@ -51,8 +51,9 @@
 </template>
 
 <script>
-import Chart from 'chart.js/auto'; // Ensure you have this installed
-
+import Chart from 'chart.js/auto';
+import { apiFetch } from "@/services/api";
+  
 export default {
   name: 'AdminDashboard',
   data() {
@@ -66,7 +67,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await fetch('/admin/dashboard', { credentials: 'include' });
+      const res = await apiFetch('/admin/dashboard', { credentials: 'include' });
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || 'Failed to fetch admin dashboard');
@@ -124,7 +125,7 @@ export default {
     },
     async exportCSV() {
       try {
-        const response = await fetch('/admin/export/csv', {
+        const response = await apiFetch('/admin/export/csv', {
           method: 'GET',
           credentials: 'include'
         });
@@ -139,7 +140,7 @@ export default {
       }
     },
     async logout() {
-      await fetch('/logout', {
+      await apiFetch('/logout', {
         method: 'GET',
         credentials: 'include'
       });
