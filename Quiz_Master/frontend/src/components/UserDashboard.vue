@@ -60,8 +60,9 @@
 </template>
 
 <script>
+import { apiFetch } from "@/services/api";
 import Chart from 'chart.js/auto';
-
+import 'chartjs-adapter-date-fns';
 export default {
   name: 'UserDashboardView',
   data() {
@@ -80,9 +81,8 @@ export default {
     async fetchData() {
       const id = this.$route.params.id;
 
-      const response = await fetch(`/user/${id}/dashboard`, {
-        method: 'GET',
-        credentials: 'include'
+      const response = await apiFetch(`/user/${id}/dashboard`, {
+        method: 'GET'
       });
 
       const result = await response.json();
@@ -154,17 +154,17 @@ export default {
     },
     async exportCSV() {
       const id = this.$route.params.id;
-      const res = await fetch(`/user/${id}/export/my_csv`, {
-        method: 'GET',
-        credentials: 'include'
+      const res = await apiFetch(`/user/${id}/export/my_csv`, {
+        method: 'GET'
+       
       });
       const result = await res.json();
       window.alert(result.message || "Export started! You'll receive the email shortly.");
     },
     async logout() {
-      await fetch('/logout', {
-        method: 'GET',
-        credentials: 'include'
+      await apiFetch('/logout', {
+        method: 'GET'
+       
       });
       this.$router.push('/login');
     }
