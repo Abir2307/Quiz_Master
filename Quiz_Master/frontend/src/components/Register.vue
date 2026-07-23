@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { apiFetch } from "@/services/api";
 export default {
   name: 'UserRegister',
   data() {
@@ -45,7 +46,7 @@ export default {
   methods: {
     async handleRegister() {
       try {
-        const response = await fetch('http://127.0.0.1:5000/register', {
+        const response = await apiFetch('/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -54,8 +55,7 @@ export default {
             password: this.password,
             qualification: this.qualification,
             dob: this.dob
-          }),
-          credentials: 'include'
+          })
         });
 
         const result = await response.json();
